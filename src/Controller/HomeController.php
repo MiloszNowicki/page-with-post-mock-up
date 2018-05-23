@@ -24,8 +24,10 @@ class HomeController extends Controller
         ]);
         $response = $client->request('GET', $hardcodedRequestHeaderUrl,array('Accept' => 'application/json') );
         $responseData  = json_decode($response->getBody(), true);
+        $renderedTwig =  $header -> createHeader();
 
-        return $this->render('home/index.html.twig', [ 'header' => $header -> createHeader(),
+        return $this->render('home/index.html.twig', [
+            'header' => $renderedTwig,
             'controller_name' =>$response->getStatusCode(),
         ]);
     }
