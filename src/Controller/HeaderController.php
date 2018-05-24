@@ -6,6 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
+
 /**
  * @Route(service ="app.header_controller")
  */
@@ -18,8 +19,9 @@ class HeaderController extends Controller
         $this->twig = $twig;
     }
 
-    public function createHeader()
+    public function createHeader($headerConfig)
     {
+
         $content = $this->twig->render('header/index.html.twig', [
             'header' => 'header',
         ]);

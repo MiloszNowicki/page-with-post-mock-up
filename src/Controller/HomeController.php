@@ -4,7 +4,8 @@ namespace App\Controller;
 
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use App\Controller\HeaderController;
+use Symfony\Component\HttpFoundation\Request;
+//use App\Controller\HeaderController;
 use GuzzleHttp\Client;
 
 class HomeController extends Controller
@@ -13,8 +14,10 @@ class HomeController extends Controller
     /**
      * @Route("/", name="home")
      */
-    public function index(HeaderController $header)
+    public function index(Request $request)//(HeaderController $header)
     {
+        $request;
+        $title = $request->attributes->get('title');
         $cmsUrl = "https://cdn.contentful.com";
         $hardcodedRequestHeaderUrl= '/spaces/0wzf2bvw11ro/entries?access_token=da65e853a24aff691bb246b6c0fb1ebbdd6ddafcd5e135eb52106238a8b6260b&fields.slug=header&content_type=staticContent';
         $hardcodedRequestFooterUrl = '/spaces/0wzf2bvw11ro/entries?access_token=da65e853a24aff691bb246b6c0fb1ebbdd6ddafcd5e135eb52106238a8b6260b&fields.slug=footer&content_type=staticContent';
@@ -22,13 +25,16 @@ class HomeController extends Controller
             'base_uri' => $cmsUrl,
             'timeout' => 2.0,
         ]);
-        $response = $client->request('GET', $hardcodedRequestHeaderUrl,array('Accept' => 'application/json') );
-        $responseData  = json_decode($response->getBody(), true);
-        $renderedTwig =  $header -> createHeader();
+        $responseData  = json_decode($client->request('GET', $hardcodedRequestHeaderUrl,array('Accept' => 'application/json') )->getBody(), true);
+
+        //$renderedTwigResponse =  $header -> createHeader($responseData);
+            ///^^^^^^ this and that are returning same resoponse vvvvvvvvv
+        $responseHeaderCtrl = $this->forward('App\Controller\HeaderController::createHeader', array('headerConfig' => $responseData));
 
         return $this->render('home/index.html.twig', [
-            'header' => $renderedTwig->getContent(),
-            'controller_name' =>$response->getStatusCode(),
+            'header' => $responseHeaderCtrl->getContent(),
+            'controller_name' =>$request->getBaseUrl(),
+            'title' => $title,
         ]);
     }
 }
