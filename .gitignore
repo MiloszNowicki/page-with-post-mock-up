@@ -25,3 +25,19 @@ yarn-error.log
 .env
 .env.dist
 phpunit.xml.dist
+
+
+<VirtualHost *:80>
+	ServerName aramis.fr.local
+	ServerAlias www.aramis.fr.local
+	DocumentRoot /home/ev1lvvitch/workspace/page-with-post-mock-up/public
+	<Directory /home/ev1lvvitch/workspace/page-with-post-mock-up/public>
+		Options FollowSymLinks
+         	AllowOverride All
+         	Require all granted
+	</Directory>
+	<FilesMatch \.php$>
+		 SetHandler "proxy:unix:/var/run/php/php7.2-fpm.sock|fcgi://localhost/
+	</FilesMatch>
+	ErrorLog /var/log/apache2/page-with-post-mock-up_error.log
+</VirtualHost *:80>
