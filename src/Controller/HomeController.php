@@ -27,7 +27,7 @@ class HomeController extends Controller
         $renderedTwig =  $header -> createHeader();
 
         return $this->render('home/index.html.twig', [
-            'header' => $renderedTwig,
+            'header' => $renderedTwig->getContent(),
             'controller_name' =>$response->getStatusCode(),
         ]);
     }
