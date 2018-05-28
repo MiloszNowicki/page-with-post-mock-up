@@ -2,10 +2,10 @@
 
 
 {% block body %}
-    <div class=>
-        <h1>{{ title }}</h1>
+    <div style="display: flex; flex-flow:column">
+        <h1>{{ title | markdown}}</h1>
         <div>
-            {{ content }}
+            {{ content | markdown}}
         </div>
     </div>
 {% endblock %}

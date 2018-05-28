@@ -51,6 +51,11 @@ class PostController extends Controller
         return $this->render('post/single-post.html.twig', ['title' => $title,'content' => $content]);
     }
 
+    public function resolveDependentWidgetContact ($widget) {
+        $widgetTable = ['contactForm' => ($this->forward('App\Controller\ContactFormController::getContactForm', array()))]
+    }
+
+
     public function makeRequest($url) {
         $client = new Client([
             'base_uri' => $this->cmsUrl,
