@@ -52,7 +52,7 @@ class PostController extends Controller
     }
 
     public function resolveDependentWidgetContact ($widget) {
-        $widgetTable = ['contactForm' => ($this->forward('App\Controller\ContactFormController::getContactForm', array()))]
+        $widgetTable = ['contactForm' => ($this->forward('App\Controller\ContactFormController::getContactForm', array()))];
     }
 
 
