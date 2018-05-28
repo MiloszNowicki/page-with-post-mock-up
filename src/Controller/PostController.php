@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use GuzzleHttp\Client;
+use App\Controller\WidgetProviderController;
 
 class PostController extends Controller
 {
@@ -47,13 +48,11 @@ class PostController extends Controller
 
         $linkData = $this->getArticleById($id);
         $title = $linkData['includes']['Entry'][0]['fields']['title'];
+        $widgets = $this->forward('App\Controller\WidgetProviderController::resolveWidgets', array('widgets' => ['contactForm']));
         $content = $linkData['includes']['Entry'][0]['fields']['content'];
-        return $this->render('post/single-post.html.twig', ['title' => $title,'content' => $content]);
+        return $this->render('post/single-post.html.twig', ['widgets' => $widgets->getContent(), 'title' => $title, 'content' => $content]);
     }
 
-    public function resolveDependentWidgetContact ($widget) {
-        $widgetTable = ['contactForm' => ($this->forward('App\Controller\ContactFormController::getContactForm', array()))];
-    }
 
 
     public function makeRequest($url) {
