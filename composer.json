@@ -26,7 +26,8 @@
         "symfony/validator": "^4.0",
         "symfony/web-link": "^4.0",
         "symfony/webpack-encore-pack": "*",
-        "symfony/yaml": "^4.0"
+        "symfony/yaml": "^4.0",
+        "dacsoftware/article-bundle":"dev-master"
     },
     "require-dev": {
         "symfony/browser-kit": "^4.0",
@@ -79,5 +80,11 @@
         "symfony": {
             "allow-contrib": false
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "git@bitbucket.org:dacsoftware/articlebundle.git"
+        }
+    ]
 }
