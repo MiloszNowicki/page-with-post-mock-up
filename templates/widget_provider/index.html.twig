@@ -1,5 +1,12 @@
-<div>
+
     {% if contact is defined %}
+        <div>
         {{ contact | raw }}
+        </div>
     {% endif %}
-</div>
+    {% if why is defined %}
+        <div>
+            {{ why | raw }}
+        </div>
+    {% endif %}
+

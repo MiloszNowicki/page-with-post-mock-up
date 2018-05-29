@@ -48,7 +48,7 @@ class PostController extends Controller
 
         $linkData = $this->getArticleById($id);
         $title = $linkData['includes']['Entry'][0]['fields']['title'];
-        $widgets = $this->forward('App\Controller\WidgetProviderController::resolveWidgets', array('widgets' => ['contactForm']));
+        $widgets = $this->forward('App\Controller\WidgetProviderController::resolveWidgets', array('widgets' => ['contactForm', 'why']));
         $content = $linkData['includes']['Entry'][0]['fields']['content'];
         return $this->render('post/single-post.html.twig', ['widgets' => $widgets->getContent(), 'title' => $title, 'content' => $content]);
     }
