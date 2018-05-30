@@ -1,22 +1,38 @@
 <!DOCTYPE html>
 <html>
-    <head>
+
+    <head
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
+        <link rel="stylesheet" href="{{ asset('build/css/bootstrap.css') }}">
     </head>
     <body>
-        <div>
+        <div class="container-fluid">
             {{ render(controller(
                 'App\\Controller\\HeaderController'
             )) }}
+
         </div>
-        {% block body %}{% endblock %}
+        <div class="container-fluid" style="background-color: #5eb5e0">
+            <div class="row">
+                {#<div class="col-2">#}
+                    {#{% block menu %}{% endblock %}#}
+                {#</div>#}
+                <div class="col-8">
+                    {% block body %}{% endblock %}
+                </div>
+                <div class="col-4">
+                    {% block nav %}{% endblock %}
+                </div>
+            </div>
+        </div>
         {% block javascripts %}{% endblock %}
-        <div>
+        <div class="container-fluid">
             {{ render(controller(
                 'App\\Controller\\FooterController'
             )) }}
         </div>
+        <script src="{{ asset('/build/js/style.js') }}"></script>
     </body>
 </html>

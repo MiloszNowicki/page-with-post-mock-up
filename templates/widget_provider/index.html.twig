@@ -1,12 +1,19 @@
+{#{% extends 'base.html.twig' %}#}
 
-    {% if contact is defined %}
-        <div>
-        {{ contact | raw }}
-        </div>
-    {% endif %}
-    {% if why is defined %}
+
+{% if why is defined %}
+    {#{% block menu %}#}
         <div>
             {{ why | raw }}
         </div>
-    {% endif %}
+    {#{% endblock %}#}
+{% endif %}
+
+{% if contact is defined %}
+    {#{% block nav %}#}
+        <div>
+            {{ contact | raw }}
+        </div>
+    {#{% endblock %}#}
+{% endif %}
 

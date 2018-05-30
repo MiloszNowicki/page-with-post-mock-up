@@ -2,13 +2,15 @@
 
 
 {% block body %}
-    <div style="display: flex; flex-flow:column">
+    <div>
         <h1>{{ title | markdown}}</h1>
         <div>
             {{ content | markdown}}
         </div>
-        <div>
-            {{ widgets | raw}}
-        </div>
     </div>
+{% endblock %}
+{% block nav %}
+<div>
+    {{ widgets | raw}}
+</div>
 {% endblock %}
