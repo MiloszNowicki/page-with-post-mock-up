@@ -10,11 +10,14 @@ use GuzzleHttp\Client;
 
 class HeaderController extends Controller
 {
-    private $headerRequest = '/spaces/0wzf2bvw11ro/entries?access_token=da65e853a24aff691bb246b6c0fb1ebbdd6ddafcd5e135eb52106238a8b6260b&fields.slug=header&content_type=staticContent';
-    private $footerRequest = '/spaces/0wzf2bvw11ro/entries?access_token=da65e853a24aff691bb246b6c0fb1ebbdd6ddafcd5e135eb52106238a8b6260b&fields.slug=footer&content_type=staticContent';
-    private $defaultRequest = '/spaces/0wzf2bvw11ro/entries?access_token=da65e853a24aff691bb246b6c0fb1ebbdd6ddafcd5e135eb52106238a8b6260b&fields.slug=header&content_type=staticContent';
-    private $headerBlankRequest = '/#';
-    private $cmsUrl = "https://cdn.contentful.com";
+    private $config = [
+        'headerRequest' => '/spaces/0wzf2bvw11ro/entries?access_token=da65e853a24aff691bb246b6c0fb1ebbdd6ddafcd5e135eb52106238a8b6260b&fields.slug=header&content_type=staticContent',
+        'footerRequest' => '/spaces/0wzf2bvw11ro/entries?access_token=da65e853a24aff691bb246b6c0fb1ebbdd6ddafcd5e135eb52106238a8b6260b&fields.slug=footer&content_type=staticContent',
+        'defaultRequest' => '/spaces/0wzf2bvw11ro/entries?access_token=da65e853a24aff691bb246b6c0fb1ebbdd6ddafcd5e135eb52106238a8b6260b&fields.slug=header&content_type=staticContent',
+        'headerBlankRequest' => '/#',
+        'cmsUrl' =>"https://cdn.contentful.com",
+    ];
+
     public function __invoke() {
         return $this->createHeader();
     }
@@ -30,13 +33,13 @@ class HeaderController extends Controller
         $domain = $this->get('request_stack')->getCurrentRequest()->server->get('HTTP_HOST');
         $route = $this->get('request_stack')->getCurrentRequest()->server->get('REDIRECT_URL');
         $baseUriRequests = [
-            'www.aramis.local' => $this->headerRequest,
-            'www.aramis.pl' => $this->headerBlankRequest,
+            'www.aramis.local' => $this->config['headerRequest'],
+            'www.aramis.pl' => $this->config['headerBlankRequest'],
         ];
 
         $routeRequestUri = [
-            '/post' => $this->footerRequest,
-            '/post/regex' => $this->footerRequest
+            '/post' => $this->config['footerRequest'],
+            '/post/regex' => $this->config['footerRequest'],
         ];
 
         if(array_key_exists($route, $routeRequestUri)) {
@@ -47,13 +50,13 @@ class HeaderController extends Controller
             return $this->makeRequest($baseUriRequests[$domain]);
         }
 
-        return $this->makeRequest($this->defaultRequest);
+        return $this->makeRequest($this->config['defaultRequest']);
 
     }
 
     public function makeRequest($url) {
         $client = new Client([
-            'base_uri' => $this->cmsUrl,
+            'base_uri' => $this->config['cmsUrl'],
             'timeout' => 2.0,
         ]);
         return json_decode($client->request(

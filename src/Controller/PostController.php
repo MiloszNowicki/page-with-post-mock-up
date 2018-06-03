@@ -13,18 +13,24 @@ class PostController extends Controller
 
     private  $contentLinkRequest = '/spaces/0wzf2bvw11ro/entries?access_token=da65e853a24aff691bb246b6c0fb1ebbdd6ddafcd5e135eb52106238a8b6260b&fields.slug=why-we-are-the-best&content_type=shortUrl';
     private $cmsUrl = 'https://cdn.contentful.com/';
+
+
+
+
+
     /**
      * Matches /post exactly
      *
      * @Route("/post", name="post")
      */
-    public function index( Request $request)
+    public function index()
     {
-        $atr = $request->attributes;
         return $this->render('post/index.html.twig', [
             'controller_name' => 'PostController',
         ]);
     }
+
+
 
     /**
      *

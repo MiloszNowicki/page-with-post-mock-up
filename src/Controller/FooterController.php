@@ -9,12 +9,13 @@ use GuzzleHttp\Client;
 
 class FooterController extends Controller
 {
-    private $request;
-    private $headerRequest = '/spaces/0wzf2bvw11ro/entries?access_token=da65e853a24aff691bb246b6c0fb1ebbdd6ddafcd5e135eb52106238a8b6260b&fields.slug=header&content_type=staticContent';
-    private $footerRequest = '/spaces/0wzf2bvw11ro/entries?access_token=da65e853a24aff691bb246b6c0fb1ebbdd6ddafcd5e135eb52106238a8b6260b&fields.slug=footer&content_type=staticContent';
-    private $footerBlankRequest = '/#';
-    private $defaultRequest = '/spaces/0wzf2bvw11ro/entries?access_token=da65e853a24aff691bb246b6c0fb1ebbdd6ddafcd5e135eb52106238a8b6260b&fields.slug=footer&content_type=staticContent';
-
+    private $config = [
+        'headerRequest' => '/spaces/0wzf2bvw11ro/entries?access_token=da65e853a24aff691bb246b6c0fb1ebbdd6ddafcd5e135eb52106238a8b6260b&fields.slug=header&content_type=staticContent',
+        'footerRequest' => '/spaces/0wzf2bvw11ro/entries?access_token=da65e853a24aff691bb246b6c0fb1ebbdd6ddafcd5e135eb52106238a8b6260b&fields.slug=footer&content_type=staticContent',
+        'defaultRequest' => '/spaces/0wzf2bvw11ro/entries?access_token=da65e853a24aff691bb246b6c0fb1ebbdd6ddafcd5e135eb52106238a8b6260b&fields.slug=header&content_type=staticContent',
+        'headerBlankRequest' => '/#',
+        'cmsUrl' => "https://cdn.contentful.com",
+    ];
     private $cmsUrl = "https://cdn.contentful.com";
     public function __invoke() {
         return $this->createFooter();
@@ -31,13 +32,13 @@ class FooterController extends Controller
         $domain = $this->get('request_stack')->getCurrentRequest()->server->get('HTTP_HOST');
         $route = $this->get('request_stack')->getCurrentRequest()->server->get('REDIRECT_URL');
         $baseUriRequests = [
-            'www.aramis.local' => $this->footerRequest,
-            'www.aramis.pl' => $this->footerBlankRequest,
+            'www.aramis.local' => $this->config['footerRequest'],
+            'www.aramis.pl' => $this->config['headerBlankRequest'],
         ];
 
         $routeRequestUri = [
-            '/post' => $this->headerRequest,
-            '/post/regex' => $this->footerRequest
+            '/post' => $this->config['headerRequest'],
+            '/post/regex' => $this->config['footerRequest']
         ];
 
         if(array_key_exists($route, $routeRequestUri)) {
@@ -48,7 +49,7 @@ class FooterController extends Controller
             return $this->makeRequest($baseUriRequests[$domain]);
         }
 
-        return $this->makeRequest($this->defaultRequest);
+        return $this->makeRequest($this->config['defaultRequest']);
 
     }
 
