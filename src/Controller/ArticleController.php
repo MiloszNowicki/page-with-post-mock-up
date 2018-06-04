@@ -8,6 +8,15 @@ use GuzzleHttp\Client;
 
 class ArticleController extends Controller
 {
+    private $twig;
+    private $landingPage;
+    private $article;
+
+    public function __construct(\Twig_Environment $twig)
+    {
+        $this->twig = $twig;
+    }
+
     private $cmsUrl = 'https://cdn.contentful.com/';
     /**
      * @Route("/article", name="article")
@@ -42,6 +51,17 @@ class ArticleController extends Controller
     public function matchContentTypeWithTemplate($contentType, $fields) {
         $availableTemplates =[
             'productLandingPage' => $this->render('article/product-landing-page.html.twig', []),
+//                function($fields) {
+//                $this->render('article/product-landing-page.html.twig', [
+//                'title' => $fields["title"],
+//                'slug' => $fields['slug'],
+//                'metaDescription' => $fields['metaDescription'],
+//                'productFilters' => $fields['productFilters'],
+//                'topContent' => $fields['topContent'],
+//                'bottomContent' => $fields["bottomContent"],
+//
+//                ]);
+//            },
             'article' => $this->render('article/single-post.html.twig', []),
             'noArticle' => $this->render('article/no-article.html.twig', []),
         ];
@@ -49,6 +69,7 @@ class ArticleController extends Controller
             return $availableTemplates[$contentType];
         }
     }
+
 
 
     public function makeRequest($url) {
