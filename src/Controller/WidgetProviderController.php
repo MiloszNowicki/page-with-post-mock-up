@@ -18,7 +18,7 @@ class WidgetProviderController extends Controller
         $this->twig = $twig;
     }
 
-    public function setContact(){
+    public function setContact() {
         $this->contact = $this->forward('App\Controller\ContactFormController::getContactForm', array())->getContent();
     }
 
@@ -30,10 +30,10 @@ class WidgetProviderController extends Controller
         $availableWidgetsCalls = [
             'contactForm' => $this->setContact(),
             'why' => $this->setWhy(),
-
             ];
         $availableWidgetsCalls[$widget];
     }
+
     public function resolveWidgets(...$widgets)
     {
         $availableWidgets = [

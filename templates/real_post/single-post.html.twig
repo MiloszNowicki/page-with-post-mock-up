@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    <div>
+        <h1>{{ title | markdown}}</h1>
+        <div>
+            {{ content | markdown}}
+        </div>
+    </div>
+{% endblock %}
+{% block nav %}
+<div>
+    {#{{ widgets | raw}}#} mock teh cock
+</div>
+{% endblock %}

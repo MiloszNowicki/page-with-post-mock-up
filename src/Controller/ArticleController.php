@@ -5,12 +5,14 @@ namespace App\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use GuzzleHttp\Client;
+use Symfony\Component\HttpFoundation\Response;
 
 class ArticleController extends Controller
 {
     private $twig;
     private $landingPage;
     private $article;
+    private $noArticle;
 
     public function __construct(\Twig_Environment $twig)
     {
@@ -32,7 +34,7 @@ class ArticleController extends Controller
      *
      * @Route("/{article}", name="article_article")
      */
-    public function article( $article)
+    public function article($article)
     {
         $contentLinkRequest = '/spaces/0wzf2bvw11ro/entries?access_token=da65e853a24aff691bb246b6c0fb1ebbdd6ddafcd5e135eb52106238a8b6260b&fields.slug=$slug&content_type=shortUrl';
         $slugToReplace = array(
@@ -45,29 +47,48 @@ class ArticleController extends Controller
         }
         $contentType = $articleData["includes"]["Entry"][0]["sys"]["contentType"]["sys"]["id"];
         $fields = $articleData["includes"]["Entry"][0]["fields"];
-        return $this->matchContentTypeWithTemplate($contentType, $fields);
+        return $this->matchContentTypeWithTemplate($contentType, $article);
     }
 
-    public function matchContentTypeWithTemplate($contentType, $fields) {
-        $availableTemplates =[
-            'productLandingPage' => $this->render('article/product-landing-page.html.twig', []),
-//                function($fields) {
-//                $this->render('article/product-landing-page.html.twig', [
-//                'title' => $fields["title"],
-//                'slug' => $fields['slug'],
-//                'metaDescription' => $fields['metaDescription'],
-//                'productFilters' => $fields['productFilters'],
-//                'topContent' => $fields['topContent'],
-//                'bottomContent' => $fields["bottomContent"],
-//
-//                ]);
-//            },
-            'article' => $this->render('article/single-post.html.twig', []),
-            'noArticle' => $this->render('article/no-article.html.twig', []),
-        ];
-        if(array_key_exists( $contentType, $availableTemplates)) {
-            return $availableTemplates[$contentType];
+    public function matchContentTypeWithTemplate($contentType, $article) {
+
+        $slug = $article;
+        switch ($contentType) {
+            case 'productLandingPage':
+                $content = $this->forward('App\Controller\LandingPageController::getLandingPage', array('article' => $slug))->getContent();
+                break;
+            case 'article':
+                $content = $this->forward('App\Controller\RealPostController::getRealPost', array())->getContent();
+                break;
+            case 'noArticle':
+                $content = $this->whatever();
+                break;
         }
+        
+        if(isset($content)) {
+            return new Response($content);
+        } else
+        {
+            echo 'there is no content, eat shit and';
+            die();
+        }
+    }
+
+    public function callTemplate($contentType, $article) {
+        $availableTemplates = [
+            'productLandingPage' => $this->setLandingPage($article),
+            'article' => $this->whatever(),
+            'noArticle' => $this->whatever(),
+        ];
+        $availableTemplates[$contentType];
+    }
+//
+//    public function setLandingPage($article) {
+//        $this->landingPage = $this->forward('App\Controller\LandingPageController::getLandingPage', array($article))->getContent();
+//    }
+
+    public function whatever() {
+        return new Response($this->render('article/no-article.html.twig', []));
     }
 
 
