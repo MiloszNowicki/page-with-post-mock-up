@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use function GuzzleHttp\default_ca_bundle;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use GuzzleHttp\Client;
@@ -36,12 +37,15 @@ class ArticleController extends Controller
      */
     public function article($article)
     {
-        $contentLinkRequest = '/spaces/0wzf2bvw11ro/entries?access_token=da65e853a24aff691bb246b6c0fb1ebbdd6ddafcd5e135eb52106238a8b6260b&fields.slug=$slug&content_type=shortUrl';
+        $url = $this->get('request_stack')->getCurrentRequest()->server->get('REDIRECT_URL');
+        $slug = $id = $this->get('request_stack')->getCurrentRequest()->attributes->get('article');// get current request
+        $contentLinkRequest = '/spaces/0wzf2bvw11ro/entries?access_token=da65e853a24aff691bb246b6c0fb1ebbdd6ddafcd5e135eb52106238a8b6260b&fields.slug=$slug&content_type=shortUrl';;
         $slugToReplace = array(
-          '$slug' => $article
+            '$slug' => $slug,
         );
         $formedRequest = strtr($contentLinkRequest, $slugToReplace);
         $articleData = $this->makeRequest($formedRequest);
+
         if(!isset($articleData['includes'])) {
             return $this->matchContentTypeWithTemplate('noArticle', []);
         }
@@ -55,16 +59,20 @@ class ArticleController extends Controller
         $slug = $article;
         switch ($contentType) {
             case 'productLandingPage':
-                $content = $this->forward('App\Controller\LandingPageController::getLandingPage', array('article' => $slug))->getContent();
+                $content = $this->forward('App\Controller\LandingPageController::getLandingPage', array())->getContent();
                 break;
             case 'article':
                 $content = $this->forward('App\Controller\RealPostController::getRealPost', array())->getContent();
-                break;
+            break;
             case 'noArticle':
                 $content = $this->whatever();
-                break;
+            break;
+            default:
+                echo 'welp, its a dead end'; die();
+            break;
+
         }
-        
+
         if(isset($content)) {
             return new Response($content);
         } else

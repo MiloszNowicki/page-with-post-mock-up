@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class WidgetProviderController extends Controller
 {
-
     private $twig;
     private  $contact;
     private $why;

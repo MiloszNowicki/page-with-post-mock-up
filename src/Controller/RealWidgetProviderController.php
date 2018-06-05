@@ -4,19 +4,18 @@ namespace App\Controller;
 
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
-use GuzzleHttp\Client;
 
-class LandingPageController extends Controller
+class RealWidgetProviderController extends Controller
 {
     private $twig;
     private $cmsUrl = 'https://cdn.contentful.com/';
-
-    public function __construct(\Twig_Environment $twig) {
+    public function __construct(\Twig_Environment $twig)
+    {
         $this->twig = $twig;
     }
 
-    public function getLandingPage() {
+    public function provideWidgets()
+    {
         $url = $this->get('request_stack')->getCurrentRequest()->server->get('REDIRECT_URL');
         $slug = $id = substr($url, strrpos($url, '/') + 1);
         $contentLinkRequest = '/spaces/0wzf2bvw11ro/entries?access_token=da65e853a24aff691bb246b6c0fb1ebbdd6ddafcd5e135eb52106238a8b6260b&fields.slug=$slug&content_type=shortUrl';;
@@ -26,18 +25,10 @@ class LandingPageController extends Controller
         $formedRequest = strtr($contentLinkRequest, $slugToReplace);
         $articleData = $this->makeRequest($formedRequest);
         $fields = $articleData["includes"]["Entry"][0]["fields"];
-        $content = $this->twig->render('landing_page/xxx.html.twig', array(
-            'title' => $fields["title"],
-            'slug' => $fields['slug'],
-            'metaDescription' => $fields['metaDescription'],
-            'productFilters' => $fields['productFilters'],
-            'topContent' => $fields['topContent'],
-            'bottomContent' => $fields["bottomContent"],
-
-        ));
-        return new Response($content);
+        return $this->render('real_widget_provider/index.html.twig', [
+            'controller_name' => 'RealWidgetProviderController',
+        ]);
     }
-
 
     public function makeRequest($url) {
         $client = new Client([
@@ -49,5 +40,4 @@ class LandingPageController extends Controller
             $url,
             array('Accept' => 'applpication/json'))->getBody(), true);
     }
-
 }
