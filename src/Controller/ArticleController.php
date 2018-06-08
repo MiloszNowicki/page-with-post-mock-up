@@ -14,31 +14,35 @@ class ArticleController extends Controller
     private $landingPage;
     private $article;
     private $noArticle;
-
+    private $cmsUrl = "https://cdn.contentful.com";
     public function __construct(\Twig_Environment $twig)
     {
         $this->twig = $twig;
     }
 
-    private $cmsUrl = 'https://cdn.contentful.com/';
-    /**
-     * @Route("/article", name="article")
-     */
-    public function index()
-    {
-        return $this->render('article/index.html.twig', [
-            'controller_name' => 'ArticleController',
-        ]);
+//    private $cmsUrl = 'https://cdn.contentful.com/';
+//    /**
+//     * @Route("/article", name="article")
+//     */
+//    public function index()
+//    {
+//        return $this->render('article/index.html.twig', [
+//            'controller_name' => 'ArticleController',
+//        ]);
+//    }
+//    /**
+//     *
+//     *
+//     * @Route("/{article}", name="article_article")
+//     */
+    public function __invoke() {
+        return $this->article();
     }
-    /**
-     *
-     *
-     * @Route("/{article}", name="article_article")
-     */
-    public function article($article)
+    public function article()
     {
         $url = $this->get('request_stack')->getCurrentRequest()->server->get('REDIRECT_URL');
-        $slug = $id = $this->get('request_stack')->getCurrentRequest()->attributes->get('article');// get current request
+        $slug = $id = substr($url,  strrpos($url, '/') + 1);
+        //        $slug = $this->get('request_stack')->getCurrentRequest()->attributes->get('article');// get current request
         $contentLinkRequest = '/spaces/0wzf2bvw11ro/entries?access_token=da65e853a24aff691bb246b6c0fb1ebbdd6ddafcd5e135eb52106238a8b6260b&fields.slug=$slug&content_type=shortUrl';;
         $slugToReplace = array(
             '$slug' => $slug,
@@ -51,12 +55,12 @@ class ArticleController extends Controller
         }
         $contentType = $articleData["includes"]["Entry"][0]["sys"]["contentType"]["sys"]["id"];
         $fields = $articleData["includes"]["Entry"][0]["fields"];
-        return $this->matchContentTypeWithTemplate($contentType, $article);
+        return $this->matchContentTypeWithTemplate($contentType);
     }
 
-    public function matchContentTypeWithTemplate($contentType, $article) {
+    public function matchContentTypeWithTemplate($contentType) {
 
-        $slug = $article;
+
         switch ($contentType) {
             case 'productLandingPage':
                 $content = $this->forward('App\Controller\LandingPageController::getLandingPage', array())->getContent();

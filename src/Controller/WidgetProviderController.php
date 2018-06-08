@@ -25,6 +25,7 @@ class WidgetProviderController extends Controller
         $this->why = $this->forward('App\Controller\WhyController::getWhyQarson', array())->getContent();
     }
 
+
     public function callWidget($widget) {
         $availableWidgetsCalls = [
             'contactForm' => $this->setContact(),

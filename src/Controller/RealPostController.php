@@ -19,7 +19,7 @@ class RealPostController extends Controller
     public function getRealPost()
     {
         $url = $this->get('request_stack')->getCurrentRequest()->server->get('REDIRECT_URL');
-        $slug = $id = substr($url, strrpos($url, '/') + 1);
+        $slug = $id = substr($url,  strrpos($url, '/') + 1);
         $contentLinkRequest = '/spaces/0wzf2bvw11ro/entries?access_token=da65e853a24aff691bb246b6c0fb1ebbdd6ddafcd5e135eb52106238a8b6260b&fields.slug=$slug&content_type=shortUrl';;
         $slugToReplace = array(
             '$slug' => $slug,

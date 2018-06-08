@@ -21,12 +21,12 @@ class PostController extends Controller
     /**
      * Matches /post exactly
      *
-     * @Route("/post", name="post")
+     * @Route("/{post}", name="post")
      */
-    public function index()
+    public function index($post)
     {
         return $this->render('post/index.html.twig', [
-            'controller_name' => 'PostController',
+            'controller_name' => $post,
         ]);
     }
 
@@ -48,11 +48,11 @@ class PostController extends Controller
     /**
      * Matches /post/*
      *
-     * @Route("/post/{slug}/{id}", name="post_show")
+     * @Route("/post/{slug}", name="post_show")
      */
-    public function show( $id ) {
+    public function show( ) {
 
-        $linkData = $this->getArticleById($id);
+        $linkData = $this->getArticleById('faggot');
         $title = $linkData['includes']['Entry'][0]['fields']['title'];
         $widgets = $this->forward('App\Controller\WidgetProviderController::resolveWidgets', array('widgets' => ['contactForm', 'why']));
         $content = $linkData['includes']['Entry'][0]['fields']['content'];
